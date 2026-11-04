@@ -1,0 +1,9 @@
+{
+    "python.defaultInterpreterPath": "/home/xuandong/miniforge3/envs/nt409/bin/python",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/src"
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda"
+}
