@@ -1,5 +1,9 @@
-numpy>=1.24
-pandas>=2.0
-gymnasium>=0.29
-stable-baselines3>=2.2,<3
-sb3-contrib>=2.2,<3
+numpy
+pandas
+scipy
+matplotlib
+gymnasium==1.4.0
+torch==2.15.0
+stable-baselines3
+sb3-contrib==2.9.2
+qiskit-ibm-runtime

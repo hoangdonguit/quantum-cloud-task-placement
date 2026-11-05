@@ -39,7 +39,9 @@ class RoundRobin(Policy):
 class DRLQ_GreedyWait(Policy):
     name = "DRLQ_GreedyWait"
     def __call__(self, sim):
-        return int(np.argmin(sim.view()["wait"]))
+        v = sim.view()
+        # Thêm tie-break 1e-6 * exec để không chọn nhầm node chậm
+        return int(np.argmin(v["wait"] + 1e-6 * v["exec"]))
 
 
 class FastestNode(Policy):
@@ -67,7 +69,8 @@ class LeastQueue(Policy):
     name = "LeastQueue"
     def __call__(self, sim):
         v = sim.view()
-        return _argmin(v["qlen"] + 1e-3 * v["wait"], v["feas"])
+        # Thêm tie-break 1e-6 * exec
+        return _argmin(v["qlen"] + 1e-3 * v["wait"] + 1e-6 * v["exec"], v["feas"])
 
 
 class GreedyFlow(Policy):

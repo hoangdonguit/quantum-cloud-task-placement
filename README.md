@@ -1,60 +1,80 @@
-# Ideal PPO experiment
+# Quantum Cloud Task Placement (NT409 Project 6)
 
-Standalone extraction of the original ideal quantum-cloud placement experiment
-from `quantum_cloud_simulator`. Compares **MaskablePPO**, **FastestNode**,
-**LeastQueue**, and **BestFidelity** using the same test workloads.
-Noise is disabled and fidelity is always 1. Timing is synthetic.
+Đồ án môn học NT409: So sánh các chính sách phân bổ tác vụ lượng tử (Task Placement) giữa Heuristics và Học tăng cường sâu (Deep Reinforcement Learning - DRL).
 
-## Run on the server
-
-Open a terminal in this `ppo` directory. Install dependencies:
+## 1. Môi trường cài đặt
+Yêu cầu: Python >= 3.10, môi trường Conda.
 
 ```bash
-python -m pip install -r requirements.txt
+conda create -n nt409 python=3.10
+conda activate nt409
+pip install -r requirements.txt
 ```
 
-Run the original experiment (training and evaluation):
+## 2. Chuẩn bị Dữ liệu (Dataset & Calibration)
+Dự án sử dụng dataset mạch lượng tử (MQT Bench) và mô hình giả lập từ QSimPy [arXiv:2405.01021]. 
+Tải dữ liệu (nếu chưa có trong thư mục `data/`):
 
 ```bash
-python run_experiments.py --recipe scaling_config.json
+git clone --depth 1 https://github.com/Cloudslab/qsimpy.git /tmp/qsimpy_ref
+cp /tmp/qsimpy_ref/qdataset/traintest/synds_800_sub_60_trainset.csv data/
+cp /tmp/qsimpy_ref/qdataset/traintest/synds_200_sub_60_testset.csv data/
 ```
 
-Settings in `scaling_config.json`: 100/500/1000 tasks per episode, arrival rates
-0.25/0.75, training seeds 0–4, 100,000 requested steps per model, and 30 test
-workloads (seeds 100–129). This trains 30 models sequentially with live terminal
-output. PPO uses CPU, as in the original configuration. Each case trains fresh
-models under its own workload distribution.
-
-To skip completed models after an interrupted run:
+Trích xuất thông số phần cứng thật (Calibration từ IBM Fake Backends):
 
 ```bash
-python run_experiments.py --recipe scaling_config.json --resume
+python tools/make_calibration.py
 ```
 
-An unfinished model restarts from scratch. Results and checkpoints are saved
-under `results/ideal_<timestamp>/`. Read `policy_summary.csv` for aggregate
-metrics and `paired_comparisons.csv` for PPO-versus-baseline comparisons.
-`mean_completion_time` means flow time: waiting plus execution time.
-
-## Small single-model run
-
-`config.json` defaults to 10 tasks per episode and 10,000 training steps:
+## 3. Huấn luyện và Đánh giá (Pipeline)
+Toàn bộ quá trình huấn luyện (195 lượt chạy: 13 kịch bản × 3 thuật toán × 5 seeds) và đánh giá Heuristic:
 
 ```bash
-python train_ppo.py
-python evaluate.py --model models/ppo_seed0.zip
+python experiments/run_ladder.py --config configs/base.json --out results/ladder_v1 --jobs 4
 ```
+*(Tham số `--jobs 4` tương ứng với 4 luồng CPU song song. Quá trình này mất khoảng 40 phút).*
 
-Keep each model's `.zip` and `.config.json` together. Evaluation must use the
-same environment configuration as training.
+## 4. Phân tích Kết quả
+Sau khi quá trình huấn luyện hoàn tất, chạy các script sau để xuất báo cáo thống kê:
 
-## Checks without training
+- **Phân tích cơ bản (Bảng điểm, Learning Curves):**
 
-```bash
-python run_experiments.py --recipe scaling_config.json --dry-run
-python -m unittest discover -s tests -v
-```
+  ```bash
+  python experiments/analyze.py --root results/ladder_v1
+  ```
+- **Phân tích thống kê nâng cao (Paired t-test, Holm correction, Baseline tinh chỉnh):**
 
-This folder is self-contained. Existing checkpoints/results, stability studies,
-OOD evaluation, feature ablations, and the later MinCompletion baseline are
-not included.
+  ```bash
+  python experiments/stats_v2.py --root results/ladder_v1
+  ```
+- **Giải thích Agent (Feature Importance, Agreement):**
+
+  ```bash
+  python experiments/explain.py --root results/ladder_v1 --case base
+  ```
+- **Đánh giá OOD (Out-of-Distribution):**
+
+  ```bash
+  python experiments/ood.py --root results/ladder_v1 --case base
+  ```
+
+## 5. Cấu trúc Thư mục
+- `configs/`: Cấu hình tham số môi trường và thuật toán.
+
+- `src/`: Mã nguồn môi trường mô phỏng (Env) và Heuristics.
+
+- `algorithms/`: Code huấn luyện DQN, DDQN3, PPO.
+
+- `experiments/`: Các script chạy thực nghiệm, phân tích, đánh giá.
+
+- `data/`: Chứa dataset CSV và `calibration.json` (được sinh tự động).
+
+- `results/`: Nơi lưu log, model và bảng kết quả (không commit lên git).
+
+
+## 6. Tài liệu tham khảo
+1. DRLQ (arXiv:2407.02748), IEEE CLOUD 2024.
+
+2. QFOR (arXiv:2508.04974), 2025.
+3. QSimPy (arXiv:2405.01021), 2024.
