@@ -1,0 +1,12 @@
+digraph G {
+rankdir=TB; graph [fontname="DejaVu Sans",bgcolor="white",pad="0.3"]; node [shape=box,style="rounded,filled",fillcolor="#edf4f8",fontname="DejaVu Sans",fontsize=12];edge[fontname="DejaVu Sans",fontsize=10];
+data[label="MQT Bench qua QSimPy\nTrain / validation / test tách nhóm"];
+cal[label="Snapshot fake backends\nMedian lỗi và tham số runtime"];
+sim[label="QCloudSim\nTask đến → kiểm tra qubit → queue FIFO"];
+policy[label="Observation và action mask\nHeuristic hoặc PPO / DQN / DDQN3"];
+eval[label="10 training seed × 200 test workload\nScore · completion time · F proxy"];
+data->sim;cal->sim;sim->policy[label="Trạng thái hiện tại"];policy->sim[label="Node được chọn; cập nhật queue"];
+sim->eval[label="Metric của episode"];
+aer[label="Aer Bell / GHZ nhỏ\nKiểm chứng riêng success và proxy"];
+cal->aer[style=dashed,label="Kiểm chứng bổ sung"];
+}
