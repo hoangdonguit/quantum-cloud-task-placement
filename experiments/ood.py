@@ -10,6 +10,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 import pandas as pd
 
 from src.config import deep_update
+from experiments.baseline_tuning import GreedyScoreTuned
 from src.heuristics import REGISTRY
 from experiments.evaluate import eval_seeds, eval_workloads, load_agent
 
@@ -37,6 +38,16 @@ def main():
     case_dir = Path(args.root) / args.case
     cfg = json.loads((case_dir / "case_config.json").read_text())
     seeds = eval_seeds(cfg)
+    selection = case_dir / "baseline_selection.json"
+    if not selection.exists():
+        raise RuntimeError("Run report.py first to freeze the validation-selected baseline")
+    selected = json.loads(selection.read_text())["selected"]
+    policies = dict(REGISTRY)
+    if selected.startswith("GreedyScoreTuned_m"):
+        m, lam = selected.split("_m", 1)[1].split("_l")
+        policies["FrozenValidationBaseline"] = lambda: GreedyScoreTuned(float(m), float(lam))
+    else:
+        policies["FrozenValidationBaseline"] = REGISTRY[selected]
     agents = {}
     for algo in args.algos:
         for run_dir in sorted(case_dir.glob(f"{algo}_seed*")):
@@ -45,7 +56,7 @@ def main():
     rows = []
     for sname, mod in scenarios(cfg["env"]).items():
         env = deep_update(cfg["env"], mod)
-        for pname, cls in REGISTRY.items():
+        for pname, cls in policies.items():
             for r in eval_workloads(env, "test", seeds, policy_cls=cls):
                 rows.append({"scenario": sname, "policy": pname, "kind": "heuristic", "train_seed": -1, **r})
         for (algo, ts), act in agents.items():
@@ -63,6 +74,8 @@ def main():
     best_h = summ[summ.kind == "heuristic"].groupby("scenario")["score"].max().rename("best_heuristic_score")
     summ = summ.merge(best_h, on="scenario")
     summ["gap_vs_best_heuristic"] = summ["score"] - summ["best_heuristic_score"]
+    frozen = summ[summ.policy == "FrozenValidationBaseline"].set_index("scenario")["score"]
+    summ["gap_vs_frozen_baseline"] = summ["score"] - summ["scenario"].map(frozen)
     summ.to_csv(out / f"ood_summary_{args.case}.csv", index=False)
     piv = summ[summ.policy.isin(args.algos + ["GreedyScore", "HybridEfficiencyRatio", "HybridFidelityQueue", "GreedyFlow"])]
     print(piv.pivot(index="scenario", columns="policy", values="score").round(3).to_string())

@@ -6,7 +6,7 @@ Mo hinh bam theo 3 bai bao + framework goc:
   * DRLQ (arXiv:2407.02748): t_exec = depth * shots / D1CPS ; completion = wait + exec ; phat khi reschedule.
   * QFOR (arXiv:2508.04974): fidelity = prod_g (1 - eps_g) tren mach da transpile, dung calibration IBM; reward = F - beta*T.
 
-KHONG co bat ky 'oracle' nao trong observation hay reward: agent va heuristic nhin cung mot thong tin vat ly."""
+Dispatcher observes model-derived estimates, not future tasks/noise outcomes. Fidelity is an analytical proxy, not measured state fidelity."""
 import bisect
 import json
 from pathlib import Path
@@ -23,8 +23,16 @@ TASK_FEATS = ["width", "orig_depth", "cx127", "shots", "resched"]
 T_OBS = np.log1p(600.0)
 
 
+def time_cost(T, scale, mode):
+    x = np.asarray(T) / scale
+    if mode == "legacy_clip": return np.minimum(x, 1.0)
+    if mode == "linear": return x
+    if mode == "log1p": return np.log1p(x) / np.log(2.0)
+    raise ValueError(mode)
+
+
 def _lognorm(x):
-    return np.minimum(np.log1p(x) / T_OBS, 1.0)
+    return np.log1p(x) / T_OBS
 
 
 def obs_groups(n_nodes):
@@ -54,7 +62,7 @@ class QCloudSim:
     def __init__(self, env_cfg, split="train"):
         self.cfg = env_cfg
         self.split = split
-        self.pool = get_pool(split)
+        self.pool = get_pool(split, env_cfg.get("data_protocol", "workload"))
         self.nodes = build_nodes(env_cfg)
         self.M = len(self.nodes)
         self.shots = float(env_cfg["shots"])
@@ -70,6 +78,7 @@ class QCloudSim:
         self.exec = np.where(self.feas, p.depth[:, mi] / d1cps[None, :] * self.shots, np.inf)
         logf = (p.cx[:, mi] * np.log1p(-e2) + p.g1[:, mi] * np.log1p(-e1) + p.meas[:, mi] * np.log1p(-ero))
         self.logF = np.where(self.feas, logf, -np.inf)
+        self.time_penalty = lambda T: time_cost(T, self.t_max, self.cfg.get("reward_mode", "log1p"))
         self.static = np.stack([qubits / 127.0, np.array([n["clops"] for n in self.nodes]) / 3000.0,
                                 np.minimum(e2 / 0.03, 1.0), np.minimum(ero / 0.2, 1.0),
                                 np.minimum(np.array([n["t2_us"] for n in self.nodes]) / 300.0, 1.0)], axis=1)
@@ -85,7 +94,9 @@ class QCloudSim:
         idx = rng.choice(self.allowed, n, replace=True)
         rate = float(c["arrival_rate"])
         if c.get("arrival_mode", "poisson") == "bursty":
-            rate = rate * np.where((np.arange(n) // 10) % 2 == 0, 3.0, 1.0 / 3.0)
+            factor = np.where((np.arange(n) // 10) % 2 == 0, 3.0, 1.0 / 3.0)
+            factor *= np.mean(1.0 / factor)
+            rate = rate * factor
         return idx, np.cumsum(rng.exponential(1.0 / rate, n) if np.ndim(rate) == 0 else rng.exponential(1.0 / rate))
 
     def reset(self, workload):
@@ -122,12 +133,12 @@ class QCloudSim:
         if self.v is None:
             return np.zeros(self.obs_dim, np.float32)
         v, p, r = self.v, self.pool, self.v["row"]
-        task = np.array([p.width[r] / 50.0, min(np.log1p(p.orig_depth[r]) / np.log1p(2000), 1.0),
-                         min(np.log1p(p.cx[r, -1]) / np.log1p(5000), 1.0), self.shots / 2048.0,
+        task = np.array([p.width[r] / 50.0, np.log1p(p.orig_depth[r]) / np.log1p(2000),
+                         np.log1p(p.cx[r, -1]) / np.log1p(5000), self.shots / 2048.0,
                          self.kappa / max(self.max_resched, 1)])
         ex = np.where(v["feas"], _lognorm(np.where(v["feas"], v["exec"], 0.0)), 1.0)
         nodes = np.concatenate([v["feas"][:, None].astype(float), self.static, _lognorm(v["wait"])[:, None],
-                                np.minimum(v["qlen"] / 10.0, 1.0)[:, None], ex[:, None], v["frel"][:, None]], axis=1)
+                                _lognorm(v["qlen"])[:, None], ex[:, None], v["frel"][:, None]], axis=1)
         return np.concatenate([task, nodes.ravel()]).astype(np.float32)
 
     def step(self, a):
@@ -146,16 +157,16 @@ class QCloudSim:
         ex = v["exec"][j]
         fin = start + ex
         T = fin - self.arrival[self.i]
-        score = float(v["frel"][j]) - self.beta * min(T / self.t_max, 1.0)
+        score = float(v["frel"][j]) - self.beta * self.time_penalty(T)
         self.next_free[j] = fin
         self.fin[j].append(fin)
-        self.rec.append((T, start - self.cur_arr, ex, float(v["F"][j]), float(v["frel"][j]), self.kappa, score, j,
+        self.rec.append((T, start - self.arrival[self.i], ex, float(v["F"][j]), float(v["frel"][j]), self.kappa, score, j,
                          int(self.pool.width[v["row"]])))
         self.i += 1
         self.kappa = 0
         done = self.i >= self.n
         if not done:
-            self.cur_arr = self.arrival[self.i]
+            self.cur_arr = max(self.cur_arr, self.arrival[self.i])
         self._prep()
         return self.obs(), score, done, {"placed": True, "T": T}
 
@@ -163,7 +174,7 @@ class QCloudSim:
         a = np.array(self.rec, dtype=float)
         T = a[:, 0]
         return {"mean_T": T.mean(), "total_T": T.sum(), "p95_T": np.percentile(T, 95), "mean_wait": a[:, 1].mean(),
-                "mean_exec": a[:, 2].mean(), "mean_F": a[:, 3].mean(), "mean_frel": a[:, 4].mean(),
+                "mean_exec": a[:, 2].mean(), "p99_T": np.percentile(T, 99), "time_over_scale": float((T >= self.t_max).mean()), "mean_F": a[:, 3].mean(), "mean_frel": a[:, 4].mean(),
                 "resched": float(self.n_fail), "makespan": float((a[:, 0] + (self.arrival[:len(a)])).max() - self.arrival[0]),
                 "score": (a[:, 6].sum() - self.penalty) / len(a)}
 
@@ -174,7 +185,7 @@ class QCloudGymEnv(gym.Env):
         self.sim = QCloudSim(env_cfg, split)
         self.use_mask = bool(env_cfg.get("mask_infeasible", True))
         self.action_space = spaces.Discrete(self.sim.M)
-        self.observation_space = spaces.Box(-1.0, 2.0, (self.sim.obs_dim,), np.float32)
+        self.observation_space = spaces.Box(0.0, np.inf, (self.sim.obs_dim,), np.float32)
 
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)

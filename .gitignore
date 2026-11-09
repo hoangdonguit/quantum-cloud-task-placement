@@ -1,50 +1,23 @@
-# === Python ===
+
+
+# Generated artifacts and local-only state
+/results/
+/quantum-results-backup/
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-build/
-dist/
-*.egg-info/
-.eggs/
-
-# === Virtual environments ===
+/data/cache_*.npz
+*.log
+*.pt
+*.pth
+*.ckpt
+*.zip
+*.tar.gz
+.env
+.env.*
+!.env.example
 .venv/
 venv/
-env/
-ENV/
-
-# === Testing / cache ===
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-htmlcov/
-.ipynb_checkpoints/
-
-# === Dữ liệu sinh tự động (có thể tái tạo) ===
-data/cache_*.npz
-data/calibration.json
-data/*.tmp.npz
-
-# === Kết quả thực nghiệm (sinh khi chạy) ===
-results/
-ket_qua_thuc_nghiem/
-models/
-
-# === Logs ===
-*.log
-logs_*.txt
-
-# === IDE (bỏ comment nếu muốn commit cấu hình chung) ===
-# .vscode/settings.json
-# .idea/
-
-# === OS ===
+.vscode/
 .DS_Store
-Thumbs.db
-
-# === Archive (backup cũ, không commit) ===
-_archive_v1/
-*.tar.gz
+/INSTALLATION.json
+/DELIVERY_MANIFEST.json

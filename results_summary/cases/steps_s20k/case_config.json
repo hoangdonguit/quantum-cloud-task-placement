@@ -1,0 +1,253 @@
+{
+  "env": {
+    "node_names": [
+      "washington",
+      "kolkata",
+      "hanoi",
+      "perth",
+      "lagos"
+    ],
+    "n_tasks": 60,
+    "arrival_rate": 0.2,
+    "arrival_mode": "poisson",
+    "max_width": 27,
+    "shots": 1024,
+    "beta": 1.0,
+    "t_max": 120.0,
+    "fail_penalty": 1.0,
+    "resched_delay": 1.0,
+    "max_resched": 5,
+    "mask_infeasible": true,
+    "node_mods": {},
+    "data_protocol": "circuit",
+    "reward_mode": "log1p"
+  },
+  "train": {
+    "timesteps": 20000,
+    "eval_every": 10000,
+    "n_val": 20
+  },
+  "eval": {
+    "n_workloads": 200,
+    "seed_start": 30000
+  },
+  "algos": {
+    "PPO": {
+      "kind": "ppo",
+      "learning_rate": 0.0003,
+      "gamma": 0.9,
+      "gae_lambda": 0.95,
+      "clip_range": 0.2,
+      "ent_coef": 0.01,
+      "n_steps": 400,
+      "batch_size": 200,
+      "n_epochs": 10,
+      "net_arch": [
+        128,
+        128
+      ]
+    },
+    "DQN": {
+      "kind": "dqn",
+      "lr": 0.0005,
+      "gamma": 0.9,
+      "batch_size": 128,
+      "buffer_size": 50000,
+      "learning_starts": 1000,
+      "train_freq": 2,
+      "target_update": 500,
+      "eps_end": 0.05,
+      "eps_fraction": 0.4,
+      "hidden": [
+        128,
+        128
+      ],
+      "double": false,
+      "dueling": false,
+      "n_step": 1
+    },
+    "DDQN3": {
+      "kind": "dqn",
+      "lr": 0.0005,
+      "gamma": 0.9,
+      "batch_size": 128,
+      "buffer_size": 50000,
+      "learning_starts": 1000,
+      "train_freq": 2,
+      "target_update": 500,
+      "eps_end": 0.05,
+      "eps_fraction": 0.4,
+      "hidden": [
+        128,
+        128
+      ],
+      "double": true,
+      "dueling": true,
+      "n_step": 3
+    }
+  },
+  "ladder": {
+    "axes": {
+      "width": [
+        {
+          "label": "w07",
+          "env": {
+            "max_width": 7
+          }
+        },
+        {
+          "label": "w16",
+          "env": {
+            "max_width": 16
+          }
+        },
+        {
+          "label": "w50",
+          "env": {
+            "max_width": 50
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "label": "n3",
+          "env": {
+            "node_names": [
+              "washington",
+              "kolkata",
+              "perth"
+            ]
+          }
+        },
+        {
+          "label": "n10",
+          "env": {
+            "node_names": [
+              "sherbrooke",
+              "washington",
+              "kolkata",
+              "mumbai",
+              "cairo",
+              "hanoi",
+              "guadalupe",
+              "perth",
+              "lagos",
+              "nairobi"
+            ]
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "label": "t20",
+          "env": {
+            "n_tasks": 20
+          }
+        },
+        {
+          "label": "t120",
+          "env": {
+            "n_tasks": 120
+          }
+        },
+        {
+          "label": "t300",
+          "env": {
+            "n_tasks": 300
+          }
+        },
+        {
+          "label": "t600",
+          "env": {
+            "n_tasks": 600
+          }
+        }
+      ],
+      "rate": [
+        {
+          "label": "r0.05",
+          "env": {
+            "arrival_rate": 0.05
+          }
+        },
+        {
+          "label": "r0.1",
+          "env": {
+            "arrival_rate": 0.1
+          }
+        },
+        {
+          "label": "r0.5",
+          "env": {
+            "arrival_rate": 0.5
+          }
+        },
+        {
+          "label": "r1.0",
+          "env": {
+            "arrival_rate": 1.0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "label": "s20k",
+          "train": {
+            "timesteps": 20000
+          }
+        },
+        {
+          "label": "s50k",
+          "train": {
+            "timesteps": 50000
+          }
+        },
+        {
+          "label": "s300k",
+          "train": {
+            "timesteps": 300000
+          }
+        }
+      ],
+      "interaction": [
+        {
+          "label": "wide_busy",
+          "env": {
+            "max_width": 50,
+            "n_tasks": 300,
+            "arrival_rate": 0.5,
+            "node_names": [
+              "sherbrooke",
+              "washington",
+              "kolkata",
+              "hanoi",
+              "perth"
+            ]
+          }
+        },
+        {
+          "label": "overload",
+          "env": {
+            "n_tasks": 600,
+            "arrival_rate": 1.0
+          }
+        }
+      ],
+      "reward": [
+        {
+          "label": "legacy",
+          "env": {
+            "reward_mode": "legacy_clip"
+          }
+        },
+        {
+          "label": "linear",
+          "env": {
+            "reward_mode": "linear"
+          }
+        }
+      ]
+    }
+  },
+  "case": "steps_s20k"
+}

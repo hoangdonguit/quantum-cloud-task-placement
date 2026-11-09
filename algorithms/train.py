@@ -15,6 +15,7 @@ import torch
 torch.set_num_threads(1)
 
 from src.config import load_config
+from src.provenance import run_fingerprint
 from src.env import QCloudGymEnv, QCloudSim
 from experiments.evaluate import eval_seeds, eval_workloads, load_agent
 
@@ -31,6 +32,7 @@ def make_val_fn(env_cfg, cfg):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--validation-only", action="store_true")
     ap.add_argument("--case-config", required=True)
     ap.add_argument("--algo", required=True)
     ap.add_argument("--seed", type=int, required=True)
@@ -78,10 +80,15 @@ def main():
         agent.learn(env, steps, eval_fn=val_fn, eval_every=tcfg["eval_every"], log=log)
         agent.save(out / "model.pt")
 
+    actual_steps = int(model.num_timesteps) if kind == "ppo" else steps
     train_time = time.time() - t0
-    curve.append({"timesteps": steps, **val_fn(load_agent(args.algo, out, cfg))})
+    curve = [x for x in curve if x["timesteps"] != actual_steps]
+    curve.append({"timesteps": actual_steps, **val_fn(load_agent(args.algo, out, cfg))})
     pd.DataFrame(curve).to_csv(out / "train_log.csv", index=False)
 
+    if args.validation_only:
+        (out / "validation_meta.json").write_text(json.dumps({"algo": args.algo, "seed": args.seed, "actual_timesteps": actual_steps, "fingerprint": run_fingerprint(cfg), "val_score": curve[-1]["val_score"]}, indent=2))
+        return
     rows = eval_workloads(env_cfg, "test", eval_seeds(cfg), act_fn=load_agent(args.algo, out, cfg))
     df = pd.DataFrame(rows)
     df.insert(0, "train_seed", args.seed)
@@ -89,7 +96,7 @@ def main():
     df.insert(0, "policy", args.algo)
     df.to_csv(out / "eval_per_workload.csv", index=False)
     (out / "run_meta.json").write_text(json.dumps({"algo": args.algo, "seed": args.seed, "timesteps": steps,
-                                                   "train_seconds": round(train_time, 1),
+                                                   "actual_timesteps": actual_steps, "fingerprint": run_fingerprint(cfg), "train_seconds": round(train_time, 1),
                                                    "test_score": float(df["score"].mean())}, indent=2))
     print(f"[{args.algo} seed={args.seed}] steps={steps} train={train_time:.0f}s test_score={df['score'].mean():.4f}")
 

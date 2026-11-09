@@ -20,7 +20,7 @@ def run_episode(sim, workload, act_fn=None, policy=None, pol_seed=0):
         policy.reset(sim, pol_seed)
     done = False
     while not done:
-        a = policy(sim) if policy is not None else act_fn(obs, sim.action_masks())
+        a = policy(sim) if policy is not None else act_fn(obs, sim.action_masks() if sim.cfg.get("mask_infeasible", True) else np.ones(sim.M, bool))
         obs, _, done, _ = sim.step(a)
     return sim.metrics()
 

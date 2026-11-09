@@ -1,0 +1,20 @@
+{
+  "method": "density_matrix",
+  "shots": 8192,
+  "seeds": [
+    409,
+    410,
+    411,
+    412,
+    413
+  ],
+  "packages": {
+    "qiskit": "2.6.2",
+    "qiskit-aer": "0.18.2",
+    "qiskit-ibm-runtime": "0.51.0",
+    "numpy": "2.3.5"
+  },
+  "signature": "a7721b4f9d2106af233b73fd7a80604c049f1a79ac54b9f192b7fba00e334beb",
+  "original_training_fingerprint": "e9bc34b12285ef55d4934bcbdacad7c75cfe5ed4b2d2b01f5d5df904d273214d",
+  "note": "Standalone repair. Classical training/statistical results unchanged. Small native circuits simulated with full mixed-state evolution; no-operation-error proxies differ from Z success."
+}
