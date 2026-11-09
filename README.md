@@ -187,8 +187,8 @@ Commit code, cấu hình và bảng/hình gọn. Giữ checkpoint đầy đủ, 
 
 Đợt supplementary_20261109_135101 hoàn tất: 25.600 lượt đánh giá trên bốn case, 10 seed DRL và 200 workload; kết quả khớp bộ chính. Có 38.400 policy call để đo latency và kiểm định OOD bổ sung với Holm24. Không phát sinh lượt train mới.
 
-Bảng bổ sung: results_summary/supplementary/. Bản thảo cập nhật: docs/Ban_thao_Quantum_Cloud_cap_nhat.docx.
+Bảng bổ sung: results_summary/supplementary/. Bản thảo cập nhật: docs/Project6_24520820_24521147_23520297.docx.
 
 ## Nghiên cứu độ nhạy beta
 
-DQN: beta 0.5 và 2, mỗi mức 10 training seed × 100k bước × 200 test workload; beta 1 dùng lại base. T trung bình lần lượt 22.29, 15.17, 11.92 giây; f_rel 0.95184, 0.91909, 0.89456. Không so sánh trực tiếp score giữa các beta. Hai so sánh mới với baseline tinh chỉnh chưa qua Holm2 (p khoảng 0.103). Bảng và metadata: results_summary/beta/. Bản thảo: docs/Ban_thao_Quantum_Cloud_bo_sung_beta.docx.
+DQN: beta 0.5 và 2, mỗi mức 10 training seed × 100k bước × 200 test workload; beta 1 dùng lại base. T trung bình lần lượt 22.29, 15.17, 11.92 giây; f_rel 0.95184, 0.91909, 0.89456. Không so sánh trực tiếp score giữa các beta. Hai so sánh mới với baseline tinh chỉnh chưa qua Holm2 (p khoảng 0.103). Bảng và metadata: results_summary/beta/. Bản thảo: docs/Project6_24520820_24521147_23520297.docx.
