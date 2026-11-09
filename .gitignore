@@ -21,3 +21,6 @@ venv/
 .DS_Store
 /INSTALLATION.json
 /DELIVERY_MANIFEST.json
+/logs/
+
+.~lock.*#

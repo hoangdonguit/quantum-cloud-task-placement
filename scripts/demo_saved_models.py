@@ -2,7 +2,9 @@
 import argparse,hashlib,json,time,html,os
 from pathlib import Path
 import numpy as np
-ROOT=Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
+import sys
+sys.path.insert(0, str(ROOT))
 
 def main():
  import torch

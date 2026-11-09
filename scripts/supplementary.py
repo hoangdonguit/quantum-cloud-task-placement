@@ -6,7 +6,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy import stats
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
+import sys
+sys.path.insert(0, str(ROOT))
 
 def holm(p):
     p=np.asarray(p);order=np.argsort(p);out=np.empty(len(p))

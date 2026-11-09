@@ -91,7 +91,7 @@ OFAT tái sử dụng base một lần, cộng interaction và reward thành 21 
 
 360 cấu hình: Perth/Lagos/Nairobi × n=2..7 × GHZ chain/star × optimization0/2 × seed409..413, 8192 shots. n=2 là Bell, chain/star khi đó trùng mạch.
 
-Đợt Aer cũ bị dừng, nguyên nhân gốc chưa xác định. **Chỉ phân tích `quantum_validation_repaired/`**: density_matrix, một luồng, timeout 120s/cấu hình, checkpoint riêng; xác minh cổng native và lỗi theo physical tuple. `repair_quantum.py` giữ ở repo root.
+Đợt Aer cũ bị dừng, nguyên nhân gốc chưa xác định. **Chỉ phân tích `quantum_validation_repaired/`**: density_matrix, một luồng, timeout 120s/cấu hình, checkpoint riêng; xác minh cổng native và lỗi theo physical tuple. `scripts/repair_quantum.py` giữ ở repo root.
 
 Success trong cơ sở Z là tần suất `00...0` hoặc `11...1`; **không đồng nhất fidelity trạng thái hay chứng nhận entanglement**. Wilson CI chỉ bao gồm nhiễu lấy mẫu shots. MAE so với success: layout .01794, median .03963 gộp 360 cấu hình; median tốt hơn tại Perth/Nairobi, layout tốt rõ ở Lagos. Kiểm tra hạng trên 3 backend chỉ có tính khám phá. Aer nhỏ chưa thay mô hình median trong scheduler.
 
@@ -129,17 +129,17 @@ Gói `official_return_20261109_070458.zip` **không chứa trọng số**; dùng
 
 ## Phân tích bổ sung trước hạn nộp
 
-`supplementary.py` ở root để không đổi fingerprint của core đã train. Không huấn luyện lại; không ghi đè `results/official`. Mỗi lần tạo output có timestamp riêng.
+`scripts/supplementary.py` ở root để không đổi fingerprint của core đã train. Không huấn luyện lại; không ghi đè `results/official`. Mỗi lần tạo output có timestamp riêng.
 
 ```bash
 # Smoke trên model thật: base, 2 seed, 3 workload; OOD vẫn dùng đủ 10×200 dữ liệu có sẵn.
-bash run_supplementary.sh --cases base --n-seeds 2 --workloads 3 --timing-states 5 --timing-repeats 2 --bootstrap 1000
+bash scripts/run_supplementary.sh --cases base --n-seeds 2 --workloads 3 --timing-states 5 --timing-repeats 2 --bootstrap 1000
 
 # Đợt đầy đủ: bốn case tiêu biểu, 10 seed, 200 workload.
-bash run_supplementary.sh --n-seeds 10 --workloads 200 --bootstrap 5000
+bash scripts/run_supplementary.sh --n-seeds 10 --workloads 200 --bootstrap 5000
 
 # OOD riêng không cần model; đọc kết quả đã lưu.
-bash run_supplementary.sh --mode ood --bootstrap 5000
+bash scripts/run_supplementary.sh --mode ood --bootstrap 5000
 ```
 
 Output chính:
@@ -158,7 +158,7 @@ Timing dùng cùng trạng thái trên quỹ đạo baseline, xáo thứ tự đ
 
 ## Tái tạo từ đầu khi cần
 
-Không chạy lại toàn bộ trước hạn nộp nếu đã có bộ kết quả hoàn chỉnh. `run_experiments.sh`/`experiments/official.py` lưu giao thức lịch sử, có stage Aer cũ; stage đó chưa được thay đổi để bảo toàn fingerprint. Đường Aer hoàn tất thực tế là script sửa độc lập tại root.
+Không chạy lại toàn bộ trước hạn nộp nếu đã có bộ kết quả hoàn chỉnh. `scripts/run_experiments.sh`/`experiments/official.py` lưu giao thức lịch sử, có stage Aer cũ; stage đó chưa được thay đổi để bảo toàn fingerprint. Đường Aer hoàn tất thực tế là script sửa độc lập tại root.
 
 Có thể tái tạo phần classical với cấu hình siêu tham số đã chọn, **không chạy lại tuning**, tại một root mới:
 
@@ -170,7 +170,7 @@ python experiments/explain.py --root results/reproduction/ladder --case base --r
 python experiments/ood.py --root results/reproduction/ladder --case base
 ```
 
-Để lặp nguyên giao thức tuning108, xem `experiments/official.py` và `configs/official.json`; không thay root lịch sử đang lưu kết quả. `repair_quantum.py` hiện giả định working directory là repo và root `results/official` đã có 630 run; không chạy trên một root khác mà chưa điều chỉnh giao thức. Đây là giới hạn điều phối hiện tại, không phải một lệnh tái tạo end-to-end duy nhất.
+Để lặp nguyên giao thức tuning108, xem `experiments/official.py` và `configs/official.json`; không thay root lịch sử đang lưu kết quả. `scripts/repair_quantum.py` hiện giả định working directory là repo và root `results/official` đã có 630 run; không chạy trên một root khác mà chưa điều chỉnh giao thức. Đây là giới hạn điều phối hiện tại, không phải một lệnh tái tạo end-to-end duy nhất.
 
 ## Lưu trữ và nguồn tham khảo
 
@@ -188,3 +188,7 @@ Commit code, cấu hình và bảng/hình gọn. Giữ checkpoint đầy đủ, 
 Đợt supplementary_20261109_135101 hoàn tất: 25.600 lượt đánh giá trên bốn case, 10 seed DRL và 200 workload; kết quả khớp bộ chính. Có 38.400 policy call để đo latency và kiểm định OOD bổ sung với Holm24. Không phát sinh lượt train mới.
 
 Bảng bổ sung: results_summary/supplementary/. Bản thảo cập nhật: docs/Ban_thao_Quantum_Cloud_cap_nhat.docx.
+
+## Nghiên cứu độ nhạy beta
+
+DQN: beta 0.5 và 2, mỗi mức 10 training seed × 100k bước × 200 test workload; beta 1 dùng lại base. T trung bình lần lượt 22.29, 15.17, 11.92 giây; f_rel 0.95184, 0.91909, 0.89456. Không so sánh trực tiếp score giữa các beta. Hai so sánh mới với baseline tinh chỉnh chưa qua Holm2 (p khoảng 0.103). Bảng và metadata: results_summary/beta/. Bản thảo: docs/Ban_thao_Quantum_Cloud_bo_sung_beta.docx.

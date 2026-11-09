@@ -2,7 +2,9 @@
 import argparse,copy,datetime,json,os,subprocess,sys,time
 from pathlib import Path
 from zoneinfo import ZoneInfo
-ROOT=Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
+import sys
+sys.path.insert(0, str(ROOT))
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--seeds',type=int,default=10);p.add_argument('--deadline',default='19:00');a=p.parse_args()

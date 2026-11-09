@@ -1,0 +1,13 @@
+{
+  "hypothesis": "Sensitivity to beta, exploratory after main results",
+  "algorithm": "DQN",
+  "beta": [
+    0.5,
+    2.0
+  ],
+  "baseline_beta1": "existing official/base; do not pool raw reward across beta",
+  "seeds": 10,
+  "steps": 100000,
+  "workloads": 200,
+  "deadline": "2026-11-09T19:00:00+07:00"
+}

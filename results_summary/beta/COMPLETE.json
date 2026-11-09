@@ -1,0 +1,1 @@
+{"n_training_runs": 20, "algorithm": "DQN", "n_seeds": 10, "exploratory": true}

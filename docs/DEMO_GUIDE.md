@@ -4,14 +4,14 @@ Làm ngay sơ đồ, giải thích và replay. Không cần chờ beta để có
 
 ## Cài vào repo gốc
 
-Giải nén gói ra /tmp/quantum-demo. Copy demo_saved_models.py, run_beta_study.py vào gốc repo; copy docs/system.* và docs/demo_viewer.html vào docs/. Không thay src/algorithms/experiments/tools nên không đổi fingerprint cốt lõi của bộ chính.
+Giải nén gói ra /tmp/quantum-demo. Copy scripts/demo_saved_models.py, scripts/run_beta_study.py vào gốc repo; copy docs/system.* và docs/demo_viewer.html vào docs/. Không thay src/algorithms/experiments/tools nên không đổi fingerprint cốt lõi của bộ chính.
 
 ## Demo tái lập từ model đã lưu
 
 ```bash
 conda activate nt409-v2
 cd ~/3_Quantum/Doan/quantum-cloud-task-placement
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 python demo_saved_models.py
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 python scripts/demo_saved_models.py
 ```
 
 Mở đường dẫn OPEN bằng Firefox. Không cần Internet hoặc web server. Các nút chọn case/policy/task và chạy tự động chỉ phát lại trace vừa tính trên CPU. Trang tự chứa dữ liệu, dùng được làm dự phòng. Mỗi policy xử lý cùng danh sách task và thời điểm đến nhưng có queue riêng. Màu xanh là node được chọn; bảng cuối là cả workload, không chỉ prefix đang xem.
@@ -38,7 +38,7 @@ Không trình bày bảng cuối của một workload như trung bình nhiều s
 ## Beta tùy chọn có giới hạn thời gian
 
 ```bash
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 python -u run_beta_study.py --seeds 10 --deadline 19:00 | tee beta_console.log
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 python -u scripts/run_beta_study.py --seeds 10 --deadline 19:00 | tee beta_console.log
 ```
 
 DQN tại beta=.5 và2, mỗi mức10seed100k bước, 200 workload; beta1 đã có dùng làm tham chiếu. Tổng20 lượt mới; đây KHÔNG phải chạy lại630 lượt. Giữ siêu tham số DQN đã chọn ở beta1: không tuyên bố tuning tối ưu ở mỗi beta. Baseline được tinh chỉnh lại bằng100 validation workload mỗi mức. CI/t-test/Holm chỉ cho2 so sánh mới của DQN với baseline; không gộp lại với Holm63. Muốn Pareto hãy so các metric T/F/f_rel, không xếp hạng raw score xuyên beta.

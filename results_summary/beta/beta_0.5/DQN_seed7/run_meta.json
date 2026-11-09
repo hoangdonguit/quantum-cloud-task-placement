@@ -1,0 +1,9 @@
+{
+  "algo": "DQN",
+  "seed": 7,
+  "timesteps": 100000,
+  "actual_timesteps": 100000,
+  "fingerprint": "f4f58a3fe1ae710eb2c28807ad486e5d69892c54a1023f7eec76097c55a7af8a",
+  "train_seconds": 64.4,
+  "test_score": 0.8463014448341641
+}

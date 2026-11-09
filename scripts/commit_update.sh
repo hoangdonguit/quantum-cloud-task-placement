@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 git rev-parse --show-toplevel >/dev/null
 # Do not silently include files staged before this command.
 if ! git diff --cached --quiet; then
@@ -10,7 +10,7 @@ fi
 python - <<'PY'
 from pathlib import Path
 import subprocess
-roots=['algorithms','configs','src','experiments','tools','tests']
+roots=['scripts','algorithms','configs','src','experiments','tools','tests']
 files=['README.md','.gitignore','requirements.txt','run_experiments.sh','supplementary.py','run_supplementary.sh','commit_update.sh','repair_quantum.py','data/calibration.json','data/synds_800_sub_60_trainset.csv','data/synds_200_sub_60_testset.csv','results_summary']
 paths=[p for p in roots+files if Path(p).exists()]
 for root in paths:
