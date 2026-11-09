@@ -181,3 +181,10 @@ Commit code, cấu hình và bảng/hình gọn. Giữ checkpoint đầy đủ, 
 - QSimPy và dataset: https://github.com/Cloudslab/qsimpy ; https://arxiv.org/abs/2405.01021
 - MQT Bench: Quantum 7, 1062 (2023).
 - Lab 01 và đề Project 6, học phần NT409, UIT, 2026.
+
+
+## Kết quả bổ sung đã hoàn tất
+
+Đợt supplementary_20261109_135101 hoàn tất: 25.600 lượt đánh giá trên bốn case, 10 seed DRL và 200 workload; kết quả khớp bộ chính. Có 38.400 policy call để đo latency và kiểm định OOD bổ sung với Holm24. Không phát sinh lượt train mới.
+
+Bảng bổ sung: results_summary/supplementary/. Bản thảo cập nhật: docs/Ban_thao_Quantum_Cloud_cap_nhat.docx.

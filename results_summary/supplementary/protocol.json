@@ -1,0 +1,30 @@
+{
+  "root": "/home/xuandong/3_Quantum/Doan/quantum-cloud-task-placement/results/official",
+  "out": "results/supplementary_20261109_135101",
+  "mode": "all",
+  "cases": [
+    "base",
+    "rate_r0.5",
+    "tasks_t600",
+    "interaction_wide_busy"
+  ],
+  "n_seeds": 10,
+  "workloads": 200,
+  "trace_workloads": 2,
+  "bootstrap": 5000,
+  "timing_states": 100,
+  "timing_repeats": 3,
+  "script_sha256": "5b4b6a903124c771cbae137ac4322d2174d9581292ca09cce44efd7e3cf6aae6",
+  "python": "3.12.16 (main, Oct 26 2026, 11:37:43) [GCC 15.3.0]",
+  "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+  "cpu": "x86_64",
+  "threads": {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "inputs": {
+    "protocol_fingerprint.txt": "c0c2e0a2d3a4949fa9840518caac0c4f390ac173ee2f61eb100cc1dcae128b93",
+    "ladder/tables/ood_per_workload_base.csv": "5ef73db570a9269928b2b24445349146d416a57aa8fd41644190054c8b5a103d"
+  }
+}
