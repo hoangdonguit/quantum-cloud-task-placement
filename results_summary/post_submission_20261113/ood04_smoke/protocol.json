@@ -1,0 +1,73 @@
+{
+  "mode": "smoke",
+  "train_env": {
+    "node_names": [
+      "washington",
+      "kolkata",
+      "hanoi",
+      "perth",
+      "lagos"
+    ],
+    "n_tasks": 60,
+    "arrival_rate": 0.2,
+    "arrival_mode": "poisson",
+    "max_width": 27,
+    "shots": 1024,
+    "beta": 1.0,
+    "t_max": 120.0,
+    "fail_penalty": 1.0,
+    "resched_delay": 1.0,
+    "max_resched": 5,
+    "mask_infeasible": true,
+    "node_mods": {},
+    "data_protocol": "circuit",
+    "reward_mode": "log1p"
+  },
+  "test_env": {
+    "node_names": [
+      "washington",
+      "kolkata",
+      "hanoi",
+      "perth",
+      "lagos"
+    ],
+    "n_tasks": 60,
+    "arrival_rate": 0.4,
+    "arrival_mode": "poisson",
+    "max_width": 27,
+    "shots": 1024,
+    "beta": 1.0,
+    "t_max": 120.0,
+    "fail_penalty": 1.0,
+    "resched_delay": 1.0,
+    "max_resched": 5,
+    "mask_infeasible": true,
+    "node_mods": {},
+    "data_protocol": "circuit",
+    "reward_mode": "log1p"
+  },
+  "validation_seeds": [
+    5000,
+    5001,
+    5002
+  ],
+  "test_seeds": [
+    30000,
+    30001,
+    30002
+  ],
+  "training_seeds": [
+    0
+  ],
+  "family": "supplementary OOD04 six comparisons, separate from Holm63",
+  "script_sha256": "a4a64f33a5a4c4944d8af376f4ce89fb0fc28e21d9ab470a8cf02e9689c1b9c6",
+  "helper_sha256": "6be7f7409b80e5446f95443f5904ca140890995312522eb00ce1316c22ea2e31",
+  "base_config_sha256": "f5f2a6c573187bf5985647c10d7ebebd0d75aa3b39ab3f1fe46b3eee52d3549c",
+  "base_fingerprint": "eed1efdf535f5a68fbf352dec996e7834574723dceb01566ef2cf38a7587ae37",
+  "reuse": "Recompute inference; no unverified saved OOD scores reused",
+  "workloads": {
+    "30000": "b76340e0904b84b0f92c04799ec2aca19fd487b463b4da6df94f98a2682a2585",
+    "30001": "472a83c5bac2a1fc188c88fee63bfce2d5e3a53769c8c6135f3e3baf67dc0987",
+    "30002": "e00af7e739e5161046d82543f5f3c64751826f56eb907a073bc4ac6c3ff38893"
+  }
+}

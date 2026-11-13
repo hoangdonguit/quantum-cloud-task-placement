@@ -1,0 +1,4 @@
+{
+  "smoke_only": true,
+  "runs": 3
+}

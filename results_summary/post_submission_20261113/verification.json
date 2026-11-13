@@ -1,0 +1,54 @@
+{
+  "commit": "5f4ab0101fa6a1a5b87e276a05cb1f87dc965d0b",
+  "official_protocol_match": true,
+  "saved_ood_sample_checks": [
+    {
+      "algo": "PPO",
+      "seed": 30000,
+      "max_metric_error": 0.0
+    },
+    {
+      "algo": "PPO",
+      "seed": 30001,
+      "max_metric_error": 0.0
+    },
+    {
+      "algo": "PPO",
+      "seed": 30002,
+      "max_metric_error": 0.0
+    },
+    {
+      "algo": "DQN",
+      "seed": 30000,
+      "max_metric_error": 0.0
+    },
+    {
+      "algo": "DQN",
+      "seed": 30001,
+      "max_metric_error": 0.0
+    },
+    {
+      "algo": "DQN",
+      "seed": 30002,
+      "max_metric_error": 0.0
+    },
+    {
+      "algo": "DDQN3",
+      "seed": 30000,
+      "max_metric_error": 0.0
+    },
+    {
+      "algo": "DDQN3",
+      "seed": 30001,
+      "max_metric_error": 0.0
+    },
+    {
+      "algo": "DDQN3",
+      "seed": 30002,
+      "max_metric_error": 0.0
+    }
+  ],
+  "all_21_baselines_unchanged_without_drlq": true,
+  "pdf_sha256": "0068378b6b5e5cf08f300785cb4b3b7bd126cc067f7ccfd1911abc2f4d858e40",
+  "docx_head_blob": "483de49e2399dbc278e3fe3cd461a5e39ae19f98"
+}

@@ -1,0 +1,31 @@
+{
+  "smoke_only": true,
+  "steps": 1100,
+  "validation_seeds": [
+    5000,
+    5001
+  ],
+  "test_seeds": [
+    30000,
+    30001
+  ],
+  "training_seeds": [
+    0
+  ],
+  "variants": {
+    "full": [],
+    "no_queue": [
+      "queue"
+    ],
+    "no_estimates": [
+      "estimates"
+    ]
+  },
+  "full_reuse": false,
+  "checkpoint_selection": "final checkpoint, same as main",
+  "script_sha256": "21ccbbbf2b7e7f639e8192fafa18d74b6649f835f83f5a7fd72689e10726c379",
+  "helper_sha256": "6be7f7409b80e5446f95443f5904ca140890995312522eb00ce1316c22ea2e31",
+  "historical_core_fingerprint": "eed1efdf535f5a68fbf352dec996e7834574723dceb01566ef2cf38a7587ae37",
+  "baseline": "Reuse frozen base selection only; no retuning against test",
+  "resume": false
+}

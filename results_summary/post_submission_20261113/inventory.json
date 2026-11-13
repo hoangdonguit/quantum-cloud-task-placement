@@ -1,0 +1,41 @@
+{
+  "python": "3.12.16",
+  "packages": {
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "torch": "2.15.0+cpu",
+    "gymnasium": "1.4.0",
+    "stable-baselines3": "2.9.2",
+    "sb3-contrib": "2.9.2",
+    "qiskit": "2.6.2",
+    "qiskit-aer": "0.18.2",
+    "qiskit-ibm-runtime": "0.51.0"
+  },
+  "base_fingerprint_current": "eed1efdf535f5a68fbf352dec996e7834574723dceb01566ef2cf38a7587ae37",
+  "base_run_meta": {
+    "algo": "DQN",
+    "seed": 0,
+    "timesteps": 100000,
+    "actual_timesteps": 100000,
+    "fingerprint": "eed1efdf535f5a68fbf352dec996e7834574723dceb01566ef2cf38a7587ae37",
+    "train_seconds": 82.5,
+    "test_score": 0.7616798695410444
+  },
+  "archive": {
+    "path": "/home/xuandong/3_Quantum/Doan/quantum-results-backup/official_with_models_20261109_073126.tar.gz",
+    "members": 5343,
+    "models": 738,
+    "checkpoint_member": "results/official/ladder/base/DQN_seed0/model.pt",
+    "checkpoint_sha256": "e8b7422665fc9c817b4bd3db4b05952a1e36e076a3453c57c2fa3aabb4c28bb2",
+    "return_zip_models": 0,
+    "zip_crc_error": null
+  },
+  "loaded_action": 2,
+  "official_runs": 630,
+  "official_models": 630,
+  "comparison": {
+    "win": 3,
+    "loss": 22,
+    "not_rejected": 38
+  }
+}

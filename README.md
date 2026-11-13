@@ -205,4 +205,4 @@ Kết quả bổ sung: ở OOD 0,4, DQN hơn baseline chọn lại trên validat
 
 ## Pilot gamma tại tasks_t600 (validation-only)
 
-Đã mở rộng bốn test tham chiếu và chạy lại 13/13 test thành công. Runner `scripts/run_gamma_pilot.py` có `--out`, `--smoke`; smoke ba gamma ×seed0 ×1.200 bước đã qua load/revalidation, không đánh giá test. Pilot full chờ máy nhóm chạy9 lượt mới: gamma0,90/0,95/0,99 ×seed0/1/2,100k bước, validation20, chọn final-checkpoint mean score. Xem [phạm vi kiểm chứng và protocol gamma](docs/VALIDATION_AND_GAMMA_PILOT.md), gồm đối chiếu mã QSimPy a1b2b84 và hướng dẫn output/resume. Không dùng số smoke để chọn gamma hoặc thay bộ chính.
+Pilot gamma tại tasks_t600 đã hoàn tất 9 lượt huấn luyện trên validation. Gamma 0,99 được chọn để đánh giá trên 200 workload test ghép cặp với gamma 0,90. Gamma 0,99 giảm thời gian chờ nhưng giảm score trung bình 0,016617 điểm và chỉ cải thiện ở 1/3 training seed. Xem [ghi chú kết quả](docs/POST_SUBMISSION_RESULTS_20261113.md) và [bảng kết quả gamma](results_summary/gamma_test_20261113_ok/).

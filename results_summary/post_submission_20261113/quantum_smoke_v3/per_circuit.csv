@@ -1,0 +1,2 @@
+backend,n,topology,level,seed,proxy_layout,proxy_median,noisy_Z_success,state_fidelity,ideal_Z_success,missing_error_ops,layout
+Perth,2,chain,0,409,0.9398471711227339,0.9346810441353182,0.9423828125,0.9911969546889636,1.0,0,"[0, 1]"
