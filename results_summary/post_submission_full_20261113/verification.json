@@ -1,0 +1,41 @@
+{
+  "complete_markers": 6,
+  "ablation_runs": 30,
+  "ablation_rows": 6000,
+  "ablation_reload_checks": [
+    {
+      "variant": "full",
+      "seed": 0,
+      "max_error": 1.7763568394002505e-15
+    },
+    {
+      "variant": "no_queue",
+      "seed": 0,
+      "max_error": 1.1102230246251565e-16
+    },
+    {
+      "variant": "no_estimates",
+      "seed": 0,
+      "max_error": 3.552713678800501e-15
+    }
+  ],
+  "full_retraining_vs_historical_max_errors": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "ood_rows": 6400,
+  "ood_historical_drl_rows_matched": 6000,
+  "ood_historical_max_metric_error": 0.0,
+  "ood_bootstrap5000_reproduced": true,
+  "quantum_configs": 72,
+  "quantum_after_bell_deduplication": 60,
+  "core_fingerprint": "eed1efdf535f5a68fbf352dec996e7834574723dceb01566ef2cf38a7587ae37"
+}

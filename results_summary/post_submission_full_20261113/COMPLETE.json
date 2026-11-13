@@ -1,0 +1,7 @@
+{
+  "validated": true,
+  "bootstrap": 5000,
+  "ablation_family": 2,
+  "ood_family": 6,
+  "analyzer_sha256": "f5cb410f9214f625efc9a833092e6e9cc1e7f4eb8039d35765fe8d5b3735b0d1"
+}

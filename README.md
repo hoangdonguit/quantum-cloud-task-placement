@@ -85,7 +85,7 @@ OFAT tái sử dụng base một lần, cộng interaction và reward thành 21 
 - SD giữa training seed tách khỏi SD workload; p95/p99 là trung bình percentile của từng workload, không phải percentile gộp task.
 - OOD dùng baseline đã chọn ở base rồi đóng băng. “Best heuristic on OOD” là tham chiếu hậu nghiệm, không phải baseline được chọn trên validation.
 - Importance là permutation theo nhóm feature, không chứng minh quan hệ nhân quả; features có thông tin dư thừa.
-- Chưa có ablation từng thành phần DDQN3, masking, beta, hoặc feature sau retraining; chưa đo thời gian cloud end-to-end hay chạy QPU thật.
+- Đã bổ sung feature ablation có retraining và beta cho DQN; chưa có ablation từng thành phần DDQN3, masking, node_static hoặc beta PPO/DDQN3; chưa đo thời gian cloud end-to-end hay chạy QPU thật.
 
 ## Aer và liên hệ Lab 01
 
@@ -192,3 +192,17 @@ Bảng bổ sung: results_summary/supplementary/. Bản thảo cập nhật: doc
 ## Nghiên cứu độ nhạy beta
 
 DQN: beta 0.5 và 2, mỗi mức 10 training seed × 100k bước × 200 test workload; beta 1 dùng lại base. T trung bình lần lượt 22.29, 15.17, 11.92 giây; f_rel 0.95184, 0.91909, 0.89456. Không so sánh trực tiếp score giữa các beta. Hai so sánh mới với baseline tinh chỉnh chưa qua Holm2 (p khoảng 0.103). Bảng và metadata: results_summary/beta/. Bản thảo: docs/Project6_24520820_24521147_23520297.docx.
+
+## Tiếp tục sau bản thảo (13/11/2026)
+
+Đã xác minh fingerprint bộ chính, đủ 630 checkpoint và load thử model từ backup; 13 test qua, demo inference ba case khớp CSV gốc. Giữ nguyên kết quả 3 thắng / 22 thua / 38 chưa bác bỏ sau Holm63. `5f4ab01` là HEAD đã rà, chưa có manifest chứng minh đó là snapshot chính xác của PDF nộp.
+
+[Audit, protocol và lệnh smoke/full](docs/POST_SUBMISSION_20261113.md) ghi rõ OOD 0,4 với baseline retuned trên validation, DQN retraining ablation và kiểm chứng Aer state fidelity. Đợt `post_submission_20261113_054813` đã hoàn tất full và được xác minh: 6.400 dòng OOD, 30 lượt retraining ablation và 72 cấu hình Aer. [Kết quả đầy đủ](docs/POST_SUBMISSION_RESULTS_20261113.md), [bảng/hình/manifest](results_summary/post_submission_full_20261113/). OOD dùng Holm6 và ablation dùng Holm2 riêng, không thay Holm63. Bằng chứng gọn: [results_summary/post_submission_20261113](results_summary/post_submission_20261113/). Bản sửa nội dung sau bản thảo: [DOCX làm việc](docs/Project6_24520820_24521147_23520297_working.docx), giữ nguyên bản gốc.
+
+Demo dự phòng mở `docs/demo/demo.html` trực tiếp trong browser; đây là replay ghi sẵn. Chạy `python scripts/demo_saved_models.py` mới thực hiện inference CPU từ checkpoint rồi sinh replay. Preset là base → rate_r0.5 → tasks_t600.
+
+Kết quả bổ sung: ở OOD 0,4, DQN hơn baseline chọn lại trên validation Δscore=+0,007150 (p Holm6=0,00038363); DDQN3 chưa có bằng chứng hơn baseline này. Retraining tại base: bỏ queue giảm score 0,044792 (p Holm2≈1,67×10⁻⁸); bỏ estimates chưa bác bỏ khác biệt. Aer nhỏ mới so Z-success với state fidelity trước readout, không thay reward scheduler. Các kết luận có phạm vi riêng trong [tài liệu kết quả](docs/POST_SUBMISSION_RESULTS_20261113.md).
+
+## Pilot gamma tại tasks_t600 (validation-only)
+
+Đã mở rộng bốn test tham chiếu và chạy lại 13/13 test thành công. Runner `scripts/run_gamma_pilot.py` có `--out`, `--smoke`; smoke ba gamma ×seed0 ×1.200 bước đã qua load/revalidation, không đánh giá test. Pilot full chờ máy nhóm chạy9 lượt mới: gamma0,90/0,95/0,99 ×seed0/1/2,100k bước, validation20, chọn final-checkpoint mean score. Xem [phạm vi kiểm chứng và protocol gamma](docs/VALIDATION_AND_GAMMA_PILOT.md), gồm đối chiếu mã QSimPy a1b2b84 và hướng dẫn output/resume. Không dùng số smoke để chọn gamma hoặc thay bộ chính.
