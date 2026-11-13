@@ -1,0 +1,10 @@
+{
+  "evaluation_csv_sha256": "80251f96b69b8594617a7e1ff256d7059df06d85f64bdc3a1e77bf23f913728c",
+  "protocol_sha256": "b1258b4fde4258687fb90a9b216a03005c34d4cd3f990b1d227338dd8824e50b",
+  "pilot_complete_sha256": "fa6c486731d129713118b0744c3451e0af54a507d458bea3db634c4488fd41bb",
+  "config_sha256": "1910db4adf8e5832fe52cf34917bc2f6773c38098d6d9afd657a147035ac48b2",
+  "baseline_csv_sha256": "e78855e7a89b36c6f33ae5dd2f751e36b5cac5859cc2255fc9295d689f6ba377",
+  "baseline_verified": true,
+  "baseline_selection": "GreedyScoreTuned_m6.0_l0.0",
+  "analyzer_sha256": "4134ff28c9c05d68fa65265122d759b3186add4cf79b7aa7a5e300c0b46c0182"
+}

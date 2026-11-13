@@ -1,0 +1,7 @@
+metric,mean_delta,ci95_low_workload_only,ci95_high_workload_only,scope
+score,-0.01661667556037512,-0.019772644043655127,-0.013472877431257978,resample 200 workloads; conditional on 3 training seeds used in gamma selection
+mean_T,-4.204256671666855,-4.399710558620714,-4.016472915125258,resample 200 workloads; conditional on 3 training seeds used in gamma selection
+mean_wait,-6.076920561727527,-6.291386739382897,-5.865606922382914,resample 200 workloads; conditional on 3 training seeds used in gamma selection
+mean_exec,1.8726638900606742,1.8333505227913107,1.91108111097108,resample 200 workloads; conditional on 3 training seeds used in gamma selection
+f_rel,-0.058339144638333715,-0.059963784606631564,-0.056724926051825136,resample 200 workloads; conditional on 3 training seeds used in gamma selection
+resched,0.0,0.0,0.0,resample 200 workloads; conditional on 3 training seeds used in gamma selection
